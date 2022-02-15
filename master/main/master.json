@@ -1,0 +1,19 @@
+{
+  "API接口服务端口": "提供任务增删改查服务",
+  "api_port": 8070,
+  "API接口读超时": "单位：毫秒",
+  "api_read_timeout": 5000,
+  "API接口写超时": "单位：毫秒",
+  "api_write_timeout": 5000,
+  "etcd集群列表": "配置多个",
+  "etcd_endpoints": [
+    "117.50.162.14:2379"
+  ],
+  "etcd连接超时": "单位毫秒",
+  "etcd_dial_timeout": 5000,
+  "etcd账号": "",
+  "etcd_username": "root",
+  "etcd密码": "",
+  "etcd_pwd": "dengxinlin2429",
+  "log_filename": "./log"
+}
