@@ -52,6 +52,16 @@ func handleJobDelete(w http.ResponseWriter, r *http.Request) {
 		common.HttpInternalErrorHandle(w, err)
 	}
 	name := r.PostForm.Get("name")
+	oldJob, err := Global_JobMgr.DeleteJob(name)
+	if err != nil {
+		common.HttpInternalErrorHandle(w, err)
+	}
+	data, err := common.BuildResponse(0, "success", oldJob)
+	if err != nil {
+		common.HttpInternalErrorHandle(w, err)
+		return
+	}
+	w.Write(data)
 }
 
 // InitApiServer 初始化apiserver

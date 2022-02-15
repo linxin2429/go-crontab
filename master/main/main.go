@@ -27,6 +27,7 @@ func main() {
 	initArgs()
 	initEnv()
 	err := master.InitConfig(configFile)
+	common.InitLogger(master.Global_Config.LogFilename)
 	if err != nil {
 		common.Logger.Fatalf("error: %s", err)
 	}

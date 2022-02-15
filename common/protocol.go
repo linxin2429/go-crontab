@@ -2,6 +2,7 @@ package common
 
 import (
 	"encoding/json"
+	"github.com/pkg/errors"
 )
 
 // Job 保存至ETCD的任务
@@ -32,7 +33,8 @@ func BuildResponse(errno int, msg string, data interface{}) ([]byte, error) {
 		Msg:   msg,
 		Data:  data,
 	}
-	return json.Marshal(response)
+	d, err := json.Marshal(response)
+	return d, errors.Wrap(err, "json marshal error")
 }
 func BuildErrorResponse(errno int, err error) []byte {
 	response := &ErrorResponse{

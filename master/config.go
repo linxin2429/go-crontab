@@ -2,6 +2,7 @@ package master
 
 import (
 	"encoding/json"
+	"github.com/pkg/errors"
 	"io/ioutil"
 )
 
@@ -24,12 +25,12 @@ type Config struct {
 func InitConfig(filename string) error {
 	content, err := ioutil.ReadFile(filename)
 	if err != nil {
-		return err
+		return errors.Wrap(err, "ioutil readfile error")
 	}
 	config := &Config{}
 	err = json.Unmarshal(content, config)
 	if err != nil {
-		return err
+		return errors.Wrap(err, "json")
 	}
 	Global_Config = config
 	return nil

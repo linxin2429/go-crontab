@@ -3,6 +3,7 @@ package master
 import (
 	"context"
 	"encoding/json"
+	"github.com/pkg/errors"
 	"go-crontab/common"
 	clientv3 "go.etcd.io/etcd/client/v3"
 	"time"
@@ -46,21 +47,31 @@ func (jobMgr *JobMgr) SaveJob(job *common.Job) (*common.Job, error) {
 	jobKey := "/cron/jobs/" + job.Name
 	jobValue, err := json.Marshal(job)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "json marshal error")
 	}
 	putResponse, err := jobMgr.kv.Put(context.TODO(), jobKey, string(jobValue), clientv3.WithPrevKV())
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "etcd put error")
 	}
 	if putResponse.PrevKv != nil {
 		oldKv := &common.Job{}
 		err := json.Unmarshal(putResponse.PrevKv.Value, oldKv)
-		return oldKv, err
-	} else {
-		return nil, nil
+		return oldKv, errors.Wrap(err, "json unmarshal err")
 	}
+	return nil, nil
 }
 
-func (jobMgr *JobMgr) DeleteJob() {
+func (jobMgr *JobMgr) DeleteJob(name string) (*common.Job, error) {
+	jobKey := "/cron/jobs/" + name
+	deleteResp, err := jobMgr.kv.Delete(context.TODO(), jobKey, clientv3.WithPrevKV())
+	if err != nil {
+		return nil, errors.Wrap(err, "etcd delete error")
+	}
+	if len(deleteResp.PrevKvs) != 0 {
+		oldKv := &common.Job{}
+		err := json.Unmarshal(deleteResp.PrevKvs[0].Value, oldKv)
+		return oldKv, errors.Wrap(err, "json unmarshal error")
+	}
+	return nil, nil
 
 }
