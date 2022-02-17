@@ -15,5 +15,7 @@
   "etcd_username": "root",
   "etcd密码": "",
   "etcd_pwd": "dengxinlin2429",
-  "log_filename": "./log"
+  "log_filename": "./log",
+  "web页面根路径": "静态页面",
+  "webroot": "./webroot"
 }

@@ -10,7 +10,7 @@ import (
 var Logger *logrus.Logger
 
 func InitLogger(filename string) {
-	logfile, err := os.OpenFile(filename, os.O_WRONLY|os.O_CREATE, 0755)
+	logfile, err := os.OpenFile(filename, os.O_WRONLY|os.O_APPEND, 0755)
 	if err != nil {
 		log.Fatalf("create file %s failed: %v", filename, err)
 	}

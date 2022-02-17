@@ -93,3 +93,14 @@ func (jobMgr *JobMgr) ListJob() ([]*common.Job, error) {
 	}
 	return jobs, nil
 }
+
+func (jobMgr *JobMgr) KillJob(name string) error {
+	killerKey := common.ETCD_JOB_KILLER_DIR + name
+	leaseGrantResponse, err := jobMgr.lease.Grant(context.TODO(), 1)
+	if err != nil {
+		return errors.Wrap(err, "etcd lease error")
+	}
+	leaseId := leaseGrantResponse.ID
+	_, err = jobMgr.kv.Put(context.TODO(), killerKey, "", clientv3.WithLease(leaseId))
+	return errors.Wrap(err, "etcd job killer put error")
+}

@@ -1,0 +1,13 @@
+{
+  "etcd集群列表": "配置多个",
+  "etcd_endpoints": [
+    "117.50.162.14:2379"
+  ],
+  "etcd连接超时": "单位毫秒",
+  "etcd_dial_timeout": 5000,
+  "etcd账号": "",
+  "etcd_username": "root",
+  "etcd密码": "",
+  "etcd_pwd": "dengxinlin2429",
+  "log_filename": "./log"
+}

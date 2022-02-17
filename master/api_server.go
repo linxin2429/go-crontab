@@ -38,7 +38,7 @@ func handleJobSave(w http.ResponseWriter, r *http.Request) {
 		common.HttpInternalErrorHandle(w, err)
 		return
 	}
-	common.Logger.Infof("job save %s", postJob)
+	common.Logger.Infof("job save %+v", *job)
 	data, err := common.BuildResponse(0, "success", oldJob)
 	if err != nil {
 		common.HttpInternalErrorHandle(w, err)
@@ -90,6 +90,24 @@ func handleJobList(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleJobKill(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+	if err != nil {
+		common.HttpInputErrorHandle(w, err)
+		return
+	}
+	name := r.PostForm.Get("name")
+	err = Global_JobMgr.KillJob(name)
+	if err != nil {
+		common.HttpInternalErrorHandle(w, err)
+		return
+	}
+	common.Logger.Infof("kill job: %s", name)
+	data, err := common.BuildResponse(0, "success", nil)
+	if err != nil {
+		common.HttpInternalErrorHandle(w, err)
+		return
+	}
+	w.Write(data)
 
 }
 
@@ -99,10 +117,15 @@ func InitApiServer() error {
 	mux.HandleFunc("/job/save", handleJobSave)
 	mux.HandleFunc("/job/delete", handleJobDelete)
 	mux.HandleFunc("/job/list", handleJobList)
+	mux.HandleFunc("/job/kill", handleJobKill)
+
+	staticDir := http.Dir(Global_Config.Webroot)
+	staticHandler := http.FileServer(staticDir)
+	mux.Handle("/", http.StripPrefix("/", staticHandler))
 
 	listener, err := net.Listen("tcp", fmt.Sprintf(":%d", Global_Config.ApiPort))
 	if err != nil {
-		return err
+		return errors.Wrap(err, "net listen error")
 	}
 	httpServer := &http.Server{
 		ReadTimeout:  time.Duration(Global_Config.ApiReadTimeout) * time.Millisecond,

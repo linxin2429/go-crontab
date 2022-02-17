@@ -1,4 +1,4 @@
-package master
+package worker
 
 import (
 	"encoding/json"
@@ -11,15 +11,11 @@ var Global_Config *Config
 
 // Config 配置
 type Config struct {
-	ApiPort         int      `json:"api_port"`
-	ApiReadTimeout  int      `json:"api_read_timeout"`
-	ApiWriteTimeout int      `json:"api_write_timeout"`
 	EtcdEndpoints   []string `json:"etcd_endpoints"`
 	EtcdDialTimeout int      `json:"etcd_dial_timeout"`
 	EtcdUsername    string   `json:"etcd_username"`
 	EtcdPwd         string   `json:"etcd_pwd"`
 	LogFilename     string   `json:"log_filename"`
-	Webroot         string   `json:"webroot"`
 }
 
 // InitConfig 初始化配置
